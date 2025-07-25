@@ -65,9 +65,9 @@ class Client_D1 extends Client_Sqlite3 {
       new Error(`Error calling ${callMethod} on connection.`);
     }
 
-    const stmt = connection.prepare(obj.sql);
+    let stmt = connection.prepare(obj.sql);
     if (obj.bindings && obj.bindings.length > 0) {
-      stmt.bind(...obj.bindings);
+      stmt = stmt.bind(...obj.bindings);
     }
 
     const { results } = await stmt?.[callMethod]();
