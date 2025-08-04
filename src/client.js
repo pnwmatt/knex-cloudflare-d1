@@ -82,7 +82,7 @@ class Client_D1 extends Client_Sqlite3 {
     obj.context = this;
     obj.responseMeta = meta;
     if (obj.initialBookmark && meta.bookmark) {
-      obj.bookmark = meta.bookmark;
+      this.bookmark = meta.bookmark;
     }
     return obj;
   }
