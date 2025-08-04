@@ -22,7 +22,7 @@ class Client_D1 extends Client_Sqlite3 {
     this.initialBookmark = config.connection.bookmark || false;
     if (this.initialBookmark) {
       this.bookmark = this.initialBookmark;
-      this.driver = this.d1Driver = this.d1Driver.withBookmark(this.initialBookmark);
+      this.driver = this.d1Driver = this.d1Driver.withSession(this.initialBookmark);
     }
   }
 
