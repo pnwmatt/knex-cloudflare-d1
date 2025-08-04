@@ -18,6 +18,12 @@ class Client_D1 extends Client_Sqlite3 {
     this.driverName = 'd1';
     this.d1Driver = config.connection.database;
     this.driver = config.connection.database
+
+    this.initialBookmark = config.connection.bookmark || false;
+    if (this.initialBookmark) {
+      this.bookmark = this.initialBookmark;
+      this.driver = this.d1Driver = this.d1Driver.withSession(this.initialBookmark);
+    }
   }
 
   _driver () {
@@ -70,10 +76,14 @@ class Client_D1 extends Client_Sqlite3 {
       stmt = stmt.bind(...obj.bindings);
     }
 
-    const { results } = await stmt?.[callMethod]();
+    const { results, meta } = await stmt?.[callMethod]();
 
     obj.response = results;
     obj.context = this;
+    obj.responseMeta = meta;
+    if (obj.initialBookmark && meta.bookmark) {
+      obj.bookmark = meta.bookmark;
+    }
     return obj;
   }
 
@@ -98,6 +108,17 @@ class Client_D1 extends Client_Sqlite3 {
       .then(function () {
         stream.end();
       });
+  }
+
+  getD1Bookmark() {
+    return this.bookmark || this.initialBookmark || false;
+  }
+
+  getD1BookmarkData() {
+    return {
+      bookmark: this.getD1Bookmark(),
+      initialBookmark: this.initialBookmark,
+    };
   }
 };
 
